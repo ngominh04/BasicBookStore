@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import vnua.fita.bookstore.bean.Book;
+import vnua.fita.bookstore.bean.BookAndOrder;
 import vnua.fita.bookstore.model.BookDao;
 import vnua.fita.bookstore.utils.MyUtils;
 
@@ -41,14 +42,10 @@ public class OrderAdmin extends HttpServlet {
 		String pathInfo = MyUtils.getPathInfoFromServletPath(servletPath);
 		String errors = null;
 		response.getWriter().append("Served at: ").append(request.getContextPath());
-		List<Book> list = BookDao.listAllBooks();
-		String keyword = request.getParameter("keyword");
+		List<BookAndOrder> list = null;
+		
 		if("OrderAdmin1".equals(pathInfo)) {
-			if(keyword != null && !keyword.isEmpty()) {
-				list = BookDao.listAllOrder_1(keyword);
-			}else {
-				list = BookDao.listAllOrder_1();
-			}
+			list = BookDao.listAllOrder_1();
 			if (list.isEmpty()) {
 				errors = "Không thể lấy dữ liệu";
 			}
@@ -95,7 +92,6 @@ public class OrderAdmin extends HttpServlet {
 					.getRequestDispatcher("/Views/orderAdmin5.jsp");
 			rd.forward(request, response);
 		}
-		
 	}
 
 	/**

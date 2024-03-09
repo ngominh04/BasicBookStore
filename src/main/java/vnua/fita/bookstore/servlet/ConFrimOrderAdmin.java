@@ -37,34 +37,27 @@ public class ConFrimOrderAdmin extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		List<String> errors = new ArrayList<String>();
-		String bookIdStr = request.getParameter("bookId");
+		String orderNo = request.getParameter("orderNo");
 		String servletPath = request.getServletPath();
 		String pathInfo = MyUtils.getPathInfoFromServletPath(servletPath);
-		Integer bookId = -1;
-		try {
-			bookId = Integer.parseInt(bookIdStr);
-		} catch (Exception e) {
-			// TODO: handle exception
-			errors.add("Không tồn tại bookId");
-		}
 		if(errors.isEmpty()) {
 			if ("confirmOrder1".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
-				book.setOrderId(book.getOrderId());
-				book.setOrderStatus(2);
-				boolean update =BookDao.updateOrder(book);
+				BookAndOrder order = BookDao.getOrder(orderNo);
+				order.setOrderId(order.getOrderId());
+				order.setOrderStatus(2);
+				boolean update =BookDao.updateOrder(order);
 				if(update) {
 					System.out.println("cập nhật thành công orderStatus");
 				}else {
 					System.out.println("cập nhật thất bại orderStatus");
 				}
-				List<Book> list = BookDao.listAllOrder_1();
-				request.setAttribute("book", list);
+				List<BookAndOrder> list = BookDao.listAllOrder_1();
+				request.setAttribute("order", list);
 				RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/OrderAdmin1");
 				dispatcher.forward(request, response);
 			}
 			if ("confirmOrder2".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
+				BookAndOrder book = BookDao.getOrder(orderNo);
 				book.setOrderId(book.getOrderId());
 				book.setOrderStatus(3);
 				boolean update =BookDao.updateOrder(book);
@@ -73,8 +66,8 @@ public class ConFrimOrderAdmin extends HttpServlet {
 				}else {
 					System.out.println("cập nhật thất bại orderStatus");
 				}
-				List<Book> list = BookDao.listAllOrder_2();
-				request.setAttribute("book", list);
+				List<BookAndOrder> list = BookDao.listAllOrder_2();
+				request.setAttribute("order", list);
 				RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/OrderAdmin2");
 				dispatcher.forward(request, response);
 			}

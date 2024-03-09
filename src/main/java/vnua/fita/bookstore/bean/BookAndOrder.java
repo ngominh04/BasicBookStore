@@ -1,6 +1,7 @@
 package vnua.fita.bookstore.bean;
 
 import java.util.Date;
+import java.util.List;
 
 public class BookAndOrder {
 	private int bookId;
@@ -28,12 +29,25 @@ public class BookAndOrder {
 	private String deliveryAddress;
 	private int orderPrice;
 	private int orderQuantity;
+	private String fullname;
+	private String mobile;
 	
-	
-	
+	public BookAndOrder(String orderNo, Date orderDate,  Boolean paymentStatus, float totalCost, String deliveryAddress,
+			String fullname, String mobile,int orderStatus) {
+		super();
+		this.orderNo = orderNo;
+		this.orderDate = orderDate;
+		this.paymentStatus = paymentStatus;
+		this.totalCost = totalCost;
+		this.deliveryAddress = deliveryAddress;
+		this.fullname = fullname;
+		this.mobile = mobile;
+		this.orderStatus=orderStatus;
+	}
+
 	public BookAndOrder(String title, String author, int price, String detail, String imagePath, String orderNo,
 			User customer, Date orderDate, int orderStatus, float totalCost, String paymentStatusDescription,
-			String deliveryAddress, int orderQuantity) {
+			String deliveryAddress, int orderQuantity,String fullname,String mobile) {
 		super();
 		this.title = title;
 		this.author = author;
@@ -48,6 +62,17 @@ public class BookAndOrder {
 		this.paymentStatusDescription = paymentStatusDescription;
 		this.deliveryAddress = deliveryAddress;
 		this.orderQuantity = orderQuantity;
+		this.fullname = fullname;
+		this.mobile = mobile;
+	}
+
+	public BookAndOrder(String orderNo, Date orderDate, float totalCost, String fullname, String mobile) {
+		super();
+		this.orderNo = orderNo;
+		this.orderDate = orderDate;
+		this.totalCost = totalCost;
+		this.fullname = fullname;
+		this.mobile = mobile;
 	}
 
 	public BookAndOrder(int bookId,String title, String author, int price, int quantityInStock, String detail, String imagePath,
@@ -70,6 +95,16 @@ public class BookAndOrder {
 		this.orderQuantity = orderQuantity;
 	}
 	
+	public BookAndOrder(int bookId, String title, String author, int price, String imagePath,int orderQuantity) {
+		super();
+		this.bookId = bookId;
+		this.title = title;
+		this.author = author;
+		this.price = price;
+		this.imagePath = imagePath;
+		this.orderQuantity = orderQuantity;
+	}
+
 	public BookAndOrder(String title, String author, int price, int quantityInStock, String detail, String imagePath,
 			Date orderDate, int orderStatus, float totalCost, String paymentImagePath, String deliveryAddress) {
 		super();
@@ -86,6 +121,27 @@ public class BookAndOrder {
 		this.deliveryAddress = deliveryAddress;
 	}
 	
+
+	public void setPaymentStatus(boolean paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public String getFullname() {
+		return fullname;
+	}
+
+	public void setFullname(String fullname) {
+		this.fullname = fullname;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
 	public int getOrderPrice() {
 		return orderPrice;
 	}
@@ -189,6 +245,12 @@ public class BookAndOrder {
 	}
 	public void setPaymentMode(String paymentMode) {
 		this.paymentMode = paymentMode;
+		if ("cashPaymentMode".equals(paymentMode)) {
+			this.paymentStatusDescription = "Tiền mặt khi nhận sách";
+		}
+		if ("tranferPaymentMode".equals(paymentMode)) {
+			this.paymentStatusDescription = "Chuyển khoản";
+		}
 	}
 	public String getPaymentModeDescription() {
 		return paymentModeDescription;
@@ -223,7 +285,7 @@ public class BookAndOrder {
 	public boolean isPaymentStatus() {
 		return paymentStatus;
 	}
-	public void setPaymentStatus(boolean paymentStatus) {
+	public void setPaymentStatus(Boolean paymentStatus) {
 		this.paymentStatus = paymentStatus;
 	}
 	public String getPaymentStatusDescription() {

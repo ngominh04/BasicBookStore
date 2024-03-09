@@ -82,14 +82,17 @@ public class BookDao {
 	}
 	
 	// order admin 1
-	public static List<Book> listAllOrder_1() {
+	public static List<BookAndOrder> listAllOrder_1() {
 		// danh sach chua ket qua tra ve
-		List<Book> listBook = new ArrayList<Book>();
+		List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 		// cau lenh sql
-		String sql = "select b.*,t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity from book b\r\n"
-				+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-				+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
+		String sql = "select distinct\r\n"
+				+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+				+ "t2.fullname fullname,t2.mobile mobile\r\n"
+				+ "    from tblorder t\r\n"
+				+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+				+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
 				+ "where t.order_status = 1";
 
 		// tao ket noi
@@ -97,28 +100,18 @@ public class BookDao {
 		try {
 			// tao doi tuong truy van CSDL
 			Statement statement = jdbcConnection.createStatement();
-
+			
 			// thuc hien truy van
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			// duyet qua danh sach ban ghi ket qua tra ve
 			while (resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String title = resultSet.getString("title");
-				String author = resultSet.getString("author");
-				int orderPrice = resultSet.getInt("orderPrice");
-				int orderQuantity = resultSet.getInt("orderQuantity");
-				String detail = resultSet.getString("detail");
-				String imagePath = resultSet.getString("image_path");
-				@SuppressWarnings("unused")
+				String orderNo = resultSet.getString("orderNo");
+				String fullName = resultSet.getString("fullname");
+				String mobile = resultSet.getString("mobile");
+				Float totalCost = resultSet.getFloat("orderPrice");
 				Date orderDate = resultSet.getTimestamp("orderDate");
-				
-
-				// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-				Book book = new Book(id, title, author, orderPrice, orderQuantity,orderDate);
-				book.setDetail(detail);
-				book.setImagePath(imagePath);
-
+				BookAndOrder book = new BookAndOrder(orderNo, orderDate, totalCost, fullName, mobile);
 				// Thêm đối tượng Bean vào danh sách
 				listBook.add(book);
 			}
@@ -128,42 +121,19 @@ public class BookDao {
 		return listBook;
 	}
 
-	public static List<Book> listAllOrder_1(String keyword) {
-		List<Book> searchBookList = new ArrayList<Book>();
-
-		String sql = "select b.*,t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity from book b\r\n"
-				+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-				+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
-				+ "where t.order_status = 1 and b.title like ?";
-		Connection jdbcConnection = Database.getConnection();
-		try {
-			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
-			preStatement.setString(1, "%" + keyword + "%");
-			ResultSet resultSet = preStatement.executeQuery();
-			while (resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String title = resultSet.getString("title");
-				String author = resultSet.getString("author");
-				int orderQuantity = resultSet.getInt("orderQuantity");
-				int orderPrice = resultSet.getInt("orderPrice");
-				Date orderDate = resultSet.getTimestamp("orderDate");
-				Book book = new Book(id, title, author, orderPrice, orderQuantity,orderDate);
-				searchBookList.add(book);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return searchBookList;
-	}
+	
 	// order admin 2
-		public static List<Book> listAllOrder_2() {
+		public static List<BookAndOrder> listAllOrder_2() {
 			// danh sach chua ket qua tra ve
-			List<Book> listBook = new ArrayList<Book>();
+			List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 			// cau lenh sql
-			String sql = "select b.*,t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity from book b\r\n"
-					+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-					+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
+			String sql = "select distinct\r\n"
+					+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+					+ "t2.fullname fullname,t2.mobile mobile\r\n"
+					+ "    from tblorder t\r\n"
+					+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+					+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
 					+ "where t.order_status = 2";
 
 			// tao ket noi
@@ -171,28 +141,18 @@ public class BookDao {
 			try {
 				// tao doi tuong truy van CSDL
 				Statement statement = jdbcConnection.createStatement();
-
+				
 				// thuc hien truy van
 				ResultSet resultSet = statement.executeQuery(sql);
 
 				// duyet qua danh sach ban ghi ket qua tra ve
 				while (resultSet.next()) {
-					int id = resultSet.getInt("id");
-					String title = resultSet.getString("title");
-					String author = resultSet.getString("author");
-					int orderPrice = resultSet.getInt("orderPrice");
-					int orderQuantity = resultSet.getInt("orderQuantity");
-					String detail = resultSet.getString("detail");
-					String imagePath = resultSet.getString("image_path");
-					@SuppressWarnings("unused")
+					String orderNo = resultSet.getString("orderNo");
+					String fullName = resultSet.getString("fullname");
+					String mobile = resultSet.getString("mobile");
+					Float totalCost = resultSet.getFloat("orderPrice");
 					Date orderDate = resultSet.getTimestamp("orderDate");
-					
-
-					// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-					Book book = new Book(id, title, author, orderPrice, orderQuantity,orderDate);
-					book.setDetail(detail);
-					book.setImagePath(imagePath);
-
+					BookAndOrder book = new BookAndOrder(orderNo, orderDate, totalCost, fullName, mobile);
 					// Thêm đối tượng Bean vào danh sách
 					listBook.add(book);
 				}
@@ -202,60 +162,56 @@ public class BookDao {
 			return listBook;
 		}
 		// order admin 3
-	public static List<Book> listAllOrder_3() {
+	public static List<BookAndOrder> listAllOrder_3() {
 		// danh sach chua ket qua tra ve
-		List<Book> listBook = new ArrayList<Book>();
+				List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
-		// cau lenh sql
-		String sql = "select b.*,t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity from book b\r\n"
-				+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-				+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
-				+ "where t.order_status = 3";
+				// cau lenh sql
+				String sql = "select distinct\r\n"
+						+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+						+ "t2.fullname fullname,t2.mobile mobile\r\n"
+						+ "    from tblorder t\r\n"
+						+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+						+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
+						+ "where t.order_status = 3";
 
-		// tao ket noi
-		Connection jdbcConnection = Database.getConnection();
-		try {
-			// tao doi tuong truy van CSDL
-			Statement statement = jdbcConnection.createStatement();
+				// tao ket noi
+				Connection jdbcConnection = Database.getConnection();
+				try {
+					// tao doi tuong truy van CSDL
+					Statement statement = jdbcConnection.createStatement();
+					
+					// thuc hien truy van
+					ResultSet resultSet = statement.executeQuery(sql);
 
-			// thuc hien truy van
-			ResultSet resultSet = statement.executeQuery(sql);
-
-			// duyet qua danh sach ban ghi ket qua tra ve
-			while (resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String title = resultSet.getString("title");
-				String author = resultSet.getString("author");
-				int orderPrice = resultSet.getInt("orderPrice");
-				int orderQuantity = resultSet.getInt("orderQuantity");
-				String detail = resultSet.getString("detail");
-				String imagePath = resultSet.getString("image_path");
-				@SuppressWarnings("unused")
-				Date orderDate = resultSet.getTimestamp("orderDate");
-				
-
-				// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-				Book book = new Book(id, title, author, orderPrice, orderQuantity,orderDate);
-				book.setDetail(detail);
-				book.setImagePath(imagePath);
-
-				// Thêm đối tượng Bean vào danh sách
-				listBook.add(book);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listBook;
+					// duyet qua danh sach ban ghi ket qua tra ve
+					while (resultSet.next()) {
+						String orderNo = resultSet.getString("orderNo");
+						String fullName = resultSet.getString("fullname");
+						String mobile = resultSet.getString("mobile");
+						Float totalCost = resultSet.getFloat("orderPrice");
+						Date orderDate = resultSet.getTimestamp("orderDate");
+						BookAndOrder book = new BookAndOrder(orderNo, orderDate, totalCost, fullName, mobile);
+						// Thêm đối tượng Bean vào danh sách
+						listBook.add(book);
+					}
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				return listBook;
 	}
 	// order admin 5
-		public static List<Book> listAllOrder_5() {
+		public static List<BookAndOrder> listAllOrder_5() {
 			// danh sach chua ket qua tra ve
-			List<Book> listBook = new ArrayList<Book>();
+			List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 			// cau lenh sql
-			String sql = "select b.*,t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity from book b\r\n"
-					+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-					+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
+			String sql = "select distinct\r\n"
+					+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+					+ "t2.fullname fullname,t2.mobile mobile\r\n"
+					+ "    from tblorder t\r\n"
+					+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+					+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
 					+ "where t.order_status = 5";
 
 			// tao ket noi
@@ -263,28 +219,18 @@ public class BookDao {
 			try {
 				// tao doi tuong truy van CSDL
 				Statement statement = jdbcConnection.createStatement();
-
+				
 				// thuc hien truy van
 				ResultSet resultSet = statement.executeQuery(sql);
 
 				// duyet qua danh sach ban ghi ket qua tra ve
 				while (resultSet.next()) {
-					int id = resultSet.getInt("id");
-					String title = resultSet.getString("title");
-					String author = resultSet.getString("author");
-					int orderPrice = resultSet.getInt("orderPrice");
-					int orderQuantity = resultSet.getInt("orderQuantity");
-					String detail = resultSet.getString("detail");
-					String imagePath = resultSet.getString("image_path");
-					@SuppressWarnings("unused")
+					String orderNo = resultSet.getString("orderNo");
+					String fullName = resultSet.getString("fullname");
+					String mobile = resultSet.getString("mobile");
+					Float totalCost = resultSet.getFloat("orderPrice");
 					Date orderDate = resultSet.getTimestamp("orderDate");
-					
-
-					// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-					Book book = new Book(id, title, author, orderPrice, orderQuantity,orderDate);
-					book.setDetail(detail);
-					book.setImagePath(imagePath);
-
+					BookAndOrder book = new BookAndOrder(orderNo, orderDate, totalCost, fullName, mobile);
 					// Thêm đối tượng Bean vào danh sách
 					listBook.add(book);
 				}
@@ -297,7 +243,7 @@ public class BookDao {
 
 	public static List<Book> listAllBooks(String fromDate, String toDate) {
 		List<Book> listBooks = new ArrayList<Book>();
-		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price) AS sum_price FROM book b "
+		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price*obor.quantity) AS sum_price FROM book b "
 				+ "LEFT JOIN "
 				+ "(SELECT ob.* from tblorder_book ob INNER JOIN tblorder o ON ob.order_id = o.order_id "
 				+ "WHERE o.order_status = ? AND (o.status_date BETWEEN ? AND ?)) obor "
@@ -387,62 +333,82 @@ public class BookDao {
 		return book;
 	}
 	
-	// lấy saachs theo idBook và idOrder
-	public static BookAndOrder getBook(Integer idBook) {
-		BookAndOrder book = null;
-		String sql = "select b.*,t.*,tb.quantity orderQuantity from book b\r\n"
-				+ "    inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
-				+ "    inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
-				+ "where b.id =?";
+	// lấy sách theo orderNo
+	public static List<BookAndOrder> getBook(String orderNo) {
+		List<BookAndOrder> list = new ArrayList<BookAndOrder>();
+		String sql = "select b.*,tb.quantity orderQuantity from book b\r\n"
+				+ "        inner join bookshop.tblorder_book tb on b.id = tb.book_id\r\n"
+				+ "        inner join bookshop.tblorder t on tb.order_id = t.order_id\r\n"
+				+ "where t.order_no = ?"
+				+ "";
 		Connection jdbcConnection = Database.getConnection();
 		try {
 			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
-			preStatement.setInt(1, idBook);
+			preStatement.setString(1, orderNo);
 			ResultSet resultSet = preStatement.executeQuery();
-			if (resultSet.next()) {
+			while(resultSet.next()) {
 				Integer bookId = resultSet.getInt("id");
 				String title = resultSet.getString("title");
 				String author = resultSet.getString("author");
 				int price = resultSet.getInt("price");
-				int quantityInStock = resultSet.getInt("quantity_in_stock");
-				String detail = resultSet.getString("detail");
-				String imagePath = resultSet.getString("image_path");
-				Integer orderId = resultSet.getInt("order_id");
-				Date orderDate=resultSet.getTimestamp("order_date");
-				int orderStatus = resultSet.getInt("order_status");
-				@SuppressWarnings("unused")
-				Float totalCost = resultSet.getFloat("total_cost");
-				String paymentImagePath = resultSet.getString("payment_img");
-				String deliveryAddress = resultSet.getString("delivery_address");
 				int orderQuantity = resultSet.getInt("orderQuantity");
+				String imagePath = resultSet.getString("image_path");
 				
-
-				String id;
 				// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-				book = new BookAndOrder(bookId, title, author, price
-						, quantityInStock, detail, imagePath,orderId
-						, orderDate, orderStatus, totalCost
-						, paymentImagePath, deliveryAddress,orderQuantity);
-				book.setDetail(detail);
-				book.setImagePath(imagePath);
+				BookAndOrder book = new BookAndOrder(bookId, title, author, price, imagePath,orderQuantity);
+				list.add(book);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return book;
+		return list;
 	}
+	
+	// lấy thông tin đơn hàng theo orderNo
+	public static BookAndOrder getOrder(String OrderNo) {
+		BookAndOrder order = null;
+		String sql = "select distinct t.*,t2.fullname fullname,t2.mobile mobile from tblorder t\r\n"
+				+ "           inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+				+ "           inner join tbluser t2 on t2.username = t.customer_username\r\n"
+				+ "where t.order_no = ?";
+		Connection jdbcConnection = Database.getConnection();
+		try {
+			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setString(1, OrderNo);
+			ResultSet resultSet = preStatement.executeQuery();
+			if (resultSet.next()) {
+				String fullname=resultSet.getString("fullname");
+				String mobile=resultSet.getString("mobile");
+				String orderNo = resultSet.getString("order_no");
+				Date orderDate= resultSet.getTimestamp("order_date");
+				String deliveryAddress = resultSet.getString("delivery_address");
+				Boolean paymentStatus=resultSet.getBoolean("payment_status");
+				Integer totalCost = resultSet.getInt("total_cost");
+				int orderStatus = resultSet.getInt("order_status");
+				// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
+				order = new BookAndOrder(orderNo, orderDate, paymentStatus
+						, totalCost, deliveryAddress, fullname, mobile,orderStatus);
+				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return order;
+	}
+	
 	
 	// update status của order
 	public static boolean updateOrder(BookAndOrder book) {
 		boolean result = false;
 		String sql = "update tblorder set order_status = ?\r\n"
-				+ "where order_id =?";
+				+ "where order_no =?";
 		Connection jdbcConnection = Database.getConnection();
 
 		try {
 			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
 			preStatement.setInt(1, book.getOrderStatus());
-			preStatement.setInt(2, book.getOrderId());
+			preStatement.setString(2, book.getOrderNo());
 			result = preStatement.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();

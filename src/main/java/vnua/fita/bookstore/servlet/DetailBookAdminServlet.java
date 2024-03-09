@@ -37,53 +37,55 @@ public class DetailBookAdminServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		List<String> errors = new ArrayList<String>();
-		String bookIdStr = request.getParameter("bookId");
+		String orderNo = request.getParameter("orderNo");
 		String servletPath = request.getServletPath();
 		String pathInfo = MyUtils.getPathInfoFromServletPath(servletPath);
-		Integer bookId = -1;
-		try {
-			bookId = Integer.parseInt(bookIdStr);
-		} catch (Exception e) {
-			// TODO: handle exception
-			errors.add("Không tồn tại bookId");
-		}
+		
 		if(errors.isEmpty()) {
 			if ("detailBookAdmin1".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
+				List<BookAndOrder> book = BookDao.getBook(orderNo);
+				BookAndOrder order = BookDao.getOrder(orderNo);
 				if(book == null) {
 					System.out.println("ko có sách");
 				}else {
 					request.setAttribute("book", book);
+					request.setAttribute("order", order);
 					RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/Views/detailBookAdmin.jsp");
 					dispatcher.forward(request, response);
 				}
 			}
 			if ("detailBookAdmin2".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
+				List<BookAndOrder> book = BookDao.getBook(orderNo);
+				BookAndOrder order = BookDao.getOrder(orderNo);
 				if(book == null) {
 					System.out.println("ko có sách");
 				}else {
 					request.setAttribute("book", book);
+					request.setAttribute("order", order);
 					RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/Views/detailBookAdmin.jsp");
 					dispatcher.forward(request, response);
 				}
 			}
 			if ("detailBookAdmin3".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
+				List<BookAndOrder> book = BookDao.getBook(orderNo);
+				BookAndOrder order = BookDao.getOrder(orderNo);
 				if(book == null) {
 					System.out.println("ko có sách");
 				}else {
 					request.setAttribute("book", book);
+					request.setAttribute("order", order);
 					RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/Views/detailBookAdmin.jsp");
 					dispatcher.forward(request, response);
 				}
 			}
 			if ("detailBookAdmin5".equals(pathInfo)) {
-				BookAndOrder book = BookDao.getBook(bookId);
+				List<BookAndOrder> book = BookDao.getBook(orderNo);
+				BookAndOrder order = BookDao.getOrder(orderNo);
 				if(book == null) {
 					System.out.println("ko có sách");
 				}else {
 					request.setAttribute("book", book);
+					request.setAttribute("order", order);
 					RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/Views/detailBookAdmin.jsp");
 					dispatcher.forward(request, response);
 				}

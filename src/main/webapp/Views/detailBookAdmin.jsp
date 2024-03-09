@@ -12,44 +12,81 @@
 	<jsp:include page="_headerAdmin.jsp"></jsp:include>
 	<jsp:include page="_menuAdmin.jsp"></jsp:include>
 	<div align="center">
-		<h3>Thông tin cuốn sách</h3>
 		<c:if test="${not empty book }">
-				<input type="hidden" name="bookId" value="${book.bookId }">
-				<table style="width: 30%" border="1">
-					<tr>
-						<td width="25%">Tên sách</td>
-						<td>${book.title }</td>
-					</tr>
-					<tr>
-						<td>Tác giả</td>
-						<td>${book.author }</td>
-					</tr>
-					<tr>
-						<td width="25%">Số lượng đặt</td>
-						<td>${book.orderQuantity }</td>
-					</tr>
-					<tr>
-						<td>Ngày đặt</td>
-						<td><fmt:formatDate value="${book.orderDate }" pattern="dd-MM-yyyy HH:mm"/></td>
-					</tr>
-					<tr>
-						<td>Giá tiền</td>
-						<td><fmt:formatNumber value="${book.price }" maxFractionDigits="0" type="number"/> <sup>đ</sup></td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<div style="text-align: justify;text-justify: inter-word;margin: 5px">
-								<img alt="Book Image" src="${book.imagePath }" style="float: left;margin-right: 5px" width="150px">
-								${book.detail }
-							</div>
-						</td>
-					</tr>
-				</table>
-				<c:if test="${book.orderStatus ==1}">
-					<a href="confirmOrder1?bookId=${book.bookId}">Xác Nhận đơn</a>
+				<div align="center">
+		<h3>CHI TIẾT HÓA ĐƠN</h3>
+		<table border="1">
+			<tr>
+				<th align="left">Họ tên:</th>
+				<td>${order.fullname }</td>
+			</tr>
+			<tr>
+				<th align="left">Số di động</th>
+				<td>${order.mobile }</td>
+			</tr>
+			<tr>
+				<th align="left">Mã hóa đơn</th>
+				<td>${order.orderNo }</td>
+			</tr>
+			<tr>
+				<th align="left">Ngày đặt mua</th>
+				<td><fmt:formatDate value="${order.orderDate }"
+						pattern="dd-MM-yyyy HH:mm" /></td>
+			</tr>
+			<tr>
+				<th align="left">Địa chỉ nhận sách</th>
+				<td>${order.deliveryAddress }</td>
+			</tr>
+			<tr>
+				<th align="left">Phương thức thanh toán:</th>
+				<td>
+					<c:if test="${order.paymentStatus == false}">Tiền mặt</c:if>
+					<c:if test="${order.paymentStatus == true}">
+						Chuyển khoản
+					</c:if>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+	<div align="center">
+		<h3>Các cuốn sách trong hóa đơn</h3>
+		<table border="1">
+			<tr>
+				<th>Tiêu đề</th>
+				<th>Tác giả</th>
+				<th>Giá tiền</th>
+				<th>Số lượng mua</th>
+				
+			</tr>
+			<c:forEach items="${book }" var="entry">
+				<tr>
+					<td>${entry.title }</td>
+					<td>${entry.author }</td>
+					<td><fmt:formatNumber type="number" maxFractionDigits="0"
+							value="${entry.price }" /><sup>đ</sup></td>
+					<td>${entry.orderQuantity }</td>
+					
+				</tr>
+
+			</c:forEach>
+		</table>
+		
+		<br>
+		Tổng số tiền:
+		<b>
+			<span id="total">
+				<fmt:formatNumber type="number" maxFractionDigits="0"
+							value="${order.totalCost }" />
+			</span>
+			<sup>đ</sup>
+		</b>
+	</div>
+				<c:if test="${order.orderStatus ==1}">
+					<a href="confirmOrder1?orderNo=${order.orderNo}">Xác Nhận đơn</a>
 				</c:if>
-				<c:if test="${book.orderStatus ==2}">
-					<a href="confirmOrder2?bookId=${book.bookId}">Xác nhận đã giao</a>
+				<c:if test="${order.orderStatus ==2}">
+					<a href="confirmOrder2?orderNo=${order.orderNo}">Xác nhận đã giao</a>
 				</c:if>
 				
 				<a href="adminHome">Tiếp tục xem tiếp</a>				

@@ -12,27 +12,28 @@
 	<jsp:include page="_headerAdmin.jsp"></jsp:include>
 	<jsp:include page="_menuAdmin.jsp"></jsp:include>
 	<div align="center">
-		<h3>Danh sách các đơn hàng đã trả hàng</h3>
+		<h3>Danh sách các đơn hàng khách trả hàng</h3>
 		<p style="color: red">${errors }</p>
 		
 		<table border="1px">
 			<tr>
-				<th>Tiêu đề</th>
-				<th>Tác giả</th>
-				<th>số lượng Mua</th>
+				<th>Mã hóa đơn</th>
+				<th>Tên khách</th>
+				<th>Số điện thoại</th>
 				<th>Giá Tiền</th>
-				<th>Ngày bán</th>
+				<th>Ngày đặt</th>
 				<th colspan="3" width="120px">Thao tác</th>
 			</tr>
 			<c:forEach items="${bookList}" var="book">
 				<tr>
-					<td>${book.title}</td>
-					<td>${book.author}</td>
-					<td>${book.quantityInStock} </td>
-					<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${book.price}"/><sup>đ</sup></td>
+					<td>${book.orderNo}</td>
+					<td>${book.fullname}</td>
+					<td>${book.mobile} </td>
+					<td><fmt:formatNumber type="number" maxFractionDigits="0" value="${book.totalCost}"/><sup>đ</sup></td>
 					<td><fmt:formatDate value="${book.orderDate}" pattern="dd-MM-yyyy HH:mm"/> </td>
+					
 					<td align="center">
-						<a href="detailBookAdmin1?bookId=${book.bookId }&orderStatus=5">Xem chi tiết</a>
+						<a href="detailBookAdmin5?orderNo=${book.orderNo }&orderStatus=5">Xem chi tiết</a>
 					</td>
 				</tr>
 			</c:forEach>
