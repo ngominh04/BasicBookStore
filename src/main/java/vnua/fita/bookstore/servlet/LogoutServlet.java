@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import vnua.fita.bookstore.utils.MyUtils;
+
 /**
  * Servlet implementation class LogoutServlet
  */
@@ -28,6 +30,7 @@ public class LogoutServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		request.getSession().invalidate();
+		MyUtils.deleteUserCookie(response);
 		response.sendRedirect(request.getContextPath()+"/");
 	}
 

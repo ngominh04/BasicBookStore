@@ -556,7 +556,6 @@ public class BookDao {
 			if (keyword != null && !keyword.isEmpty()) {
 				preStatement.setString(1, "%" + keyword + "%");
 			}
-
 			ResultSet resultSet = preStatement.executeQuery();
 			if (resultSet.next()) {
 				result = resultSet.getInt(1);

@@ -12,57 +12,53 @@ import vnua.fita.bookstore.database.Database;
 
 
 public class UserDao {
-	public static void selectAll()  {
-		String SELECT_ALL ="SELECT * FROM tbluser";
-		try(Connection connection =Database.getConnection();
-				Statement statement=connection.createStatement()){
-			ResultSet resultSet = statement.executeQuery(SELECT_ALL);
-			while (resultSet.next()) {
-				String id = resultSet.getString("id");
-				String username = resultSet.getString("username");
-				
-				System.out.println(id+" - "+username);
-				
-			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-			// TODO: handle exception
-		}
-	}
+	private static PreparedStatement preStatement;
+	private static ResultSet resultSet;
 	
-	public static User checkLogin(String username,String password) {
-		String sql = "select *from tbluser where username = ? and password = ?";
-		User user = null;
-		try (Connection connection = Database.getConnection();
-		PreparedStatement statement=connection.prepareStatement(sql);){
-			
-		statement.setString(1, username);
-		statement.setString(2, password);
-		ResultSet resultSet = statement.executeQuery();
+	public static User findUser(String username, String password) {
+		String sql = "SELECT * FROM tbluser WHERE username = ? AND password = ?";
 		
-		
-		if(resultSet.next()) {
-			user = new User();
-			user.setFullname(resultSet.getString("fullname"));
-			user.setUsername(username);
-			user.setPasword(password);
-			user.setAddress(resultSet.getString("address"));
-			user.setEmail(resultSet.getString("email"));
-			user.setMobile(resultSet.getString("mobile"));
-			user.setRole(resultSet.getByte("role"));
+		Connection jdbcConnection = Database.getConnection();
+		try {
+			preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setString(1, username);
+			preStatement.setString(2, password);
+			resultSet = preStatement.executeQuery();
+			if (resultSet.next()) {
+				return new User(resultSet.getString("username"),
+						resultSet.getString("password"), resultSet.getInt("role"),
+						resultSet.getString("fullname"), resultSet.getString("email"),
+						resultSet.getString("mobile"), resultSet.getString("address"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		connection.close();
+		return null;
+	}
+
+	public static User findUser(String username) {
+		String sql = "SELECT * FROM tbluser WHERE username = ?";
 		
-		} catch (Exception e) {
-			// TODO: handle exception
+		Connection jdbcConnection = Database.getConnection();
+		try {
+			preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setString(1, username);
+			resultSet = preStatement.executeQuery();
+			if (resultSet.next()) {
+				return new User(resultSet.getString("username"),
+						resultSet.getString("password"), resultSet.getInt("role"),
+						resultSet.getString("fullname"), resultSet.getString("email"),
+						resultSet.getString("mobile"), resultSet.getString("address"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		return user;
-		
+		return null;
 	}
 	
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
-		checkLogin("a", "12345");
-		System.out.println(checkLogin("a", "12345"));
+//		checkLogin("a", "12345");
+//		System.out.println(checkLogin("a", "12345"));
 //		selectAll();
 	}
 }

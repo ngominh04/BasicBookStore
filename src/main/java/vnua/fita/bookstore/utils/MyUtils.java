@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.Map;
 
 import javax.print.attribute.standard.Fidelity;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
@@ -95,5 +98,70 @@ public class MyUtils {
 	}
 	public static User getLoginedUser(HttpSession session) {
 		return (User) session.getAttribute("loginedUser");
+	}
+	public static void storeUserCookie(HttpServletResponse response, User user) {
+		System.out.println("Store user cookie");
+		Cookie cookieUserName = new Cookie("USERNAME_STORE_IN_COOKIE_OF_BOOKSTORE",user.getUsername());
+		// 1 ngay(doi ra giay)
+		cookieUserName.setMaxAge(60 * 60 * 24);
+		response.addCookie(cookieUserName);
+		Cookie cookieToken = new Cookie("TOKEN_STORE_IN_COOKIE_OF_BOOKSTORE",createTokenFromUserInfo(user));
+		
+		//1 ngay (da doi ra giay)
+		cookieToken.setMaxAge(60*60*24);
+		response.addCookie(cookieToken);
+	}
+	
+	public static String getUserNameInCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if(cookies != null) {
+			for(Cookie cookie: cookies) {
+				if("USERNAME_STORE_IN_COOKIE_OF_BOOKSTORE".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	// Lấy ra chuỗi mã hóa lưu trong Cookie
+	public static String getTokenInCookie(HttpServletRequest request) {
+		Cookie[] cookies = request.getCookies();
+		if (cookies != null) {
+			for (Cookie cookie : cookies) {
+				if ("TOKEN_STORE_IN_COOKIE_OF_BOOKSTORE".equals(cookie.getName())) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
+	}
+
+	// Tạo chuỗi mã hóa để lưu vào cookie, dành cho xác thực về sau
+	public static String createTokenFromUserInfo(User user) {
+		return user.getUsername() + "SECRET_STRING" + user.getPasword();
+	}
+
+	// xóa Cookie của người dùng
+	public static void deleteUserCookie(HttpServletResponse response) {
+		Cookie cookieUserName = new Cookie("USERNAME_STORE_IN_COOKIE_OF_BOOKSTORE",null);
+		cookieUserName.setMaxAge(0);
+		response.addCookie(cookieUserName);
+		Cookie cookieToken = new Cookie("TOKEN_STORE_IN_COOKIE_OF_BOOKSTORE",null);
+				
+		cookieToken.setMaxAge(0);
+		response.addCookie(cookieToken);
+	}
+	public static String getServletPath(String servletPathFull) {
+		if (servletPathFull == null || servletPathFull.isEmpty()) {
+			// Hoặc có thể ném một ngoại lệ
+			return ""; 
+		}
+
+		String[] result = servletPathFull.split("/");
+		if (result.length == 0) {
+			return "";
+		}
+		return "/"+result[1];
 	}
 }

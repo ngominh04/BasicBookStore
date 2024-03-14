@@ -53,7 +53,7 @@ public class LoginServlet extends HttpServlet {
 		List<String> errors = loginForm.validate();
 		if(errors.isEmpty()) {
 
-		User user= UserDao.checkLogin(username, password);
+		User user= UserDao.findUser(username, password);
 		// Nếu ko thấy, bổ sung vào ds lỗi
 
 		if (user == null) {
