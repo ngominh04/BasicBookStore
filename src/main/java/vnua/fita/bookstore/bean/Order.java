@@ -92,10 +92,10 @@ public class Order implements Comparable<Order>{
 
 	public void setPaymentMode(String paymentMode) {
 		this.paymentMode = paymentMode;
-		if ("cashPaymentMode".equals(paymentMode)) {
+		if (paymentMode == "cash") {
 			this.paymentStatusDescription = "Tiền mặt khi nhận sách";
 		}
-		if ("tranferPaymentMode".equals(paymentMode)) {
+		if (paymentMode == "tranfer") {
 			this.paymentStatusDescription = "Chuyển khoản";
 		}
 	}
@@ -140,7 +140,7 @@ public class Order implements Comparable<Order>{
 			this.orderStatusDescription = "Khách trả hàng";
 			break;
 		case 6:
-			this.orderStatusDescription = "Khách hàng không còn đủ";
+			this.orderStatusDescription = "Măt hàng không còn đủ";
 			break;
 		
 	}

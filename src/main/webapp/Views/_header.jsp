@@ -22,7 +22,7 @@
 			<c:if test="${not empty loginedUser }">
 				Xin chào <b>${loginedUser.fullname }</b>
 				|
-				<a href="${pageContext.request.contextPath }/accountInfo">Thông tin tài khoản/dơn hàng</a>
+				<a href="${pageContext.request.contextPath}/customerOrderList">Thông tin tài khoản/ đơn hàng</a>
 				|
 				<a href="${pageContext.request.contextPath }/logout">Đăng xuất</a>
 			</c:if>

@@ -36,55 +36,54 @@ public class CartServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+			throws ServletException, IOException {
 		HttpSession session = request.getSession();
 		List<String> errors = new ArrayList<String>();
 		String servletPath = request.getServletPath();
 		String pathInfo = MyUtils.getPathInfoFromServletPath(servletPath);
 		String bookIdStr = request.getParameter("bookId");
-		int bookId = -1;
 		String quantityPurchasedStr = request.getParameter("quantityPurchased");
+		int bookId = -1;
 		int quantityPurchased = -1;
+		try {
+			if(bookIdStr != null) { 
+				bookId = Integer.parseInt(bookIdStr);
+			}
+		} catch (NumberFormatException e) {
+			errors.add("Giá trị id không hợp lệ");
+		}
 		
 		try {
-			if (bookIdStr != null) {
-				bookId =Integer.parseInt(bookIdStr);
-				
-			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			errors.add("Chưa có sách tồn tại");
-		}
-		try {
-			if (quantityPurchasedStr !=null) {
+			if(quantityPurchasedStr != null) { 
 				quantityPurchased = Integer.parseInt(quantityPurchasedStr);
 			}
-		} catch (Exception e) {
-			// TODO: handle exception
-			errors.add("Chưa có quantity");
+		} catch (NumberFormatException e) {
+			errors.add("Giá trị số lượng không hợp lệ");
 		}
-		if (errors.isEmpty()) {
-			if ("addToCart".equals(pathInfo)) {
+		
+		if(errors.isEmpty()) {
+			if("addToCart".equals(pathInfo)) {//thêm vào giỏ hàng
 				Book selectedBook = BookDao.getBook(bookId);
 				Cart cartOfCustomer = MyUtils.getCartOfCustomer(session);
-				if(cartOfCustomer == null) {
-					cartOfCustomer=new Cart();
+				if(cartOfCustomer == null) { //chưa tồn tại giỏ hàng
+					cartOfCustomer = new Cart();
 				}
-				cartOfCustomer.addCartItemToCart(bookId, new CartItem(selectedBook,quantityPurchased));
+				cartOfCustomer.addCartItemToCart(bookId, new CartItem(selectedBook, quantityPurchased));
 				MyUtils.storeCart(session, cartOfCustomer);
-			}else if("removeFromCart".equals(pathInfo)){
+				
+			}else if("removeFromCart".equals(pathInfo)){ //xóa từ giỏ hàng
 				Cart cartOfCustomer = MyUtils.getCartOfCustomer(session);
 				cartOfCustomer.removeCartItemFromCart(bookId);
 				MyUtils.storeCart(session, cartOfCustomer);
 			}
-			RequestDispatcher dispatcher = request.getServletContext().getRequestDispatcher("/Views/cartView.jsp");
-			dispatcher.forward(request, response);
-		}else {
+			
+			RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/Views/cartView.jsp");
+			rd.forward(request, response);
+		}else { 
 			response.sendRedirect(request.getContextPath()+"/clientHome");
 		}
-		
 	}
-
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */

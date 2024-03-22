@@ -43,8 +43,10 @@ public class ClientHomeServlet extends HttpServlet {
 		if (request.getParameter("page") != null) {
 			page =Integer.parseInt(request.getParameter("page"));
 		}
+		
 		String keyword = request.getParameter("keyword");
 		list = BookDao.listAllBooks((page-1)*revordsPerPage, revordsPerPage, keyword);
+		
 		int noOfRecords = BookDao.getNoOfRecords(keyword);
 		int noOfPages = (int) Math.ceil(noOfRecords*1.0/revordsPerPage);
 		

@@ -33,28 +33,32 @@
 					<th>Ngày xác nhận</th>
 					<th>Địa chỉ nhận sách</th>
 					<th>Phương thức thanh toán</th>
-					<th>trạng thái đơn hàng</th>
+					<th>Trạng thái đơn hàng</th>
 					<th>Thao tác</th>
-					
 				</tr>
-				<c:forEach items="${orderListOfCustomer }" var="orderOfCustomer">
+				<c:forEach items="${orderListOfCustomer}" var="orderOfCustomer">
 					<tr>
-						<td>${orderOfCustomer.orderNo }</td>
-						<td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${orderOfCustomer.orderDate }"/></td>
-						<td><fmt:formatDate pattern="dd-MM-yyyy HH:mm" value="${orderOfCustomer.orderApproveDate }"/></td>
-						<td>${orderOfCustomer.deliveryAddress }</td>
-						<td>${orderOfCustomer.paymentModeDescription }</td>
+						<td>${orderOfCustomer.orderNo}</td>
+						<td><fmt:formatDate value="${orderOfCustomer.orderDate}"
+								pattern="dd-MM-yyyy HH:mm" /></td>
+						<td><fmt:formatDate
+								value="${orderOfCustomer.orderApproveDate}"
+								pattern="dd-MM-yyyy HH:mm" /></td>
+						<td>${orderOfCustomer.deliveryAddress}</td>
 						<td>
-							${orderOfCustomer.orderStatusDescription }
-							<c:if test="${orderOfCustomer.orderStatus == 1 }">
-								&nbsp;-&nbsp;${orderOfCustomer.paymentModeDescription }
-							</c:if>
+							${orderOfCustomer.paymentMode }
 						</td>
 						<td>
-							<button onclick="document.getElementById('div${orderOfCustomer.orderId}').style.display='block'">Xem chi tiết</button> 
-							<button onclick="document.getElementById('div${orderOfCustomer.orderId}').style.display='none'">Ẩn</button>
-							<div id="div${orderOfCustomer.orderId }" style="display: none;">
-								<h3>các cuốn sách trong hóa đơn</h3>
+							${orderOfCustomer.orderStatusDescription}
+						</td>
+						<td>
+							<button
+								onclick="document.getElementById('div${orderOfCustomer.orderId}').style.display='block';">Xem
+								chi tiết</button>
+							<button
+								onclick="document.getElementById('div${orderOfCustomer.orderId}').style.display='none';">Ẩn</button>
+							<div id="div${orderOfCustomer.orderId}" style="display: none;">
+								<h3>Các cuốn sách trong hóa đơn</h3>
 								<table border="1">
 									<tr style="background-color: yellow;">
 										<th>Tiêu đề</th>
@@ -63,30 +67,30 @@
 										<th>Số lượng mua</th>
 										<th>Tổng thành phần</th>
 									</tr>
-									<c:forEach items="${orderOfCustomer.orderBookList }" var="cartItem">
+									<c:forEach items="${orderOfCustomer.orderBookList}"
+										var="cartItem">
 										<tr>
-											<td>${cartItem.selectedBook.title }</td>
-											<td>${cartItem.selectedBook.author }</td>
-											<td>
-												<fmt:formatNumber type="number" maxFractionDigits="0" value="${cartItem.selectedBook.price }"/><sup>đ</sup>
-											</td>
-											<td>${cartItem.quantity }</td>
-											<td>
-												<fmt:formatNumber type="number" maxFractionDigits="0" value="${cartItem.selectedBook.price * cartItem.quantity  }"/><sup>đ</sup>
-											</td>
+											<td>${cartItem.selectedBook.title}</td>
+											<td>${cartItem.selectedBook.author}</td>
+											<td><fmt:formatNumber type="number"
+													maxFractionDigits="0"
+													value="${cartItem.selectedBook.price}"></fmt:formatNumber><sup>đ</sup></td>
+											<td>${cartItem.quantity}</td>
+											<td><fmt:formatNumber type="number"
+													maxFractionDigits="0"
+													value="${cartItem.selectedBook.price * cartItem.quantity}"></fmt:formatNumber><sup>đ</sup></td>
 										</tr>
 									</c:forEach>
 								</table>
-								<br>Tổng số tiền: 
-								<b><span>
-									<fmt:formatNumber type="number" maxFractionDigits="0" value="${orderOfCustomer.totalCost }"/><sup>đ</sup>
-								</span></b>
-							</div>
+								<br> Tổng số tiền: <b> <span> <fmt:formatNumber
+											type="number" maxFractionDigits="0" value="${orderOfCustomer.totalCost }"></fmt:formatNumber>
+								</span> <sup>đ</sup>
+								</b>
+							</div> 
 						</td>
 					</tr>
 				</c:forEach>
-				
-			</table>	
+			</table>
 		</div>
 	</div>
 

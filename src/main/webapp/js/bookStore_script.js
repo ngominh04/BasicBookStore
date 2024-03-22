@@ -5,36 +5,41 @@ function activeAsLink(link) {
 			window.location = link ;
 		}
 		
-function plusValue(elementId, maxQuantity){
+function plusValue(elementId, maxQuantity) {
 	let quantity = parseInt(document.getElementById(elementId).value);
-	if(quantity +1 <= maxQuantity){
-		document.getElementById(elementId).value = quantity+1;
-	}else{
-		alert('giá trị không được vượt quá: '+ maxQuantity);
+	if (quantity + 1 <= maxQuantity) {
+		document.getElementById(elementId).value = quantity + 1;
+	} else {
+		alert('Giá trị không được vượt quá: ' + maxQuantity);
 	}
 }
-function minusValue(elementId){
+
+function minusValue(elementId) {
 	let quantity = parseInt(document.getElementById(elementId).value);
-	if(quantity -1 >=1){
+	if (quantity - 1 >= 1) {
 		document.getElementById(elementId).value = quantity - 1;
-		
 	}
 }
 function validateValue(element,maxQuantity){
-	if(element.value >maxQuantity){
+	let quantity = parseInt(document.getElementById(element).value);
+	if(quantity >maxQuantity){
+		document.getElementById(element).value = maxQuantity;
 		alert('giá trị không được vượt quá :' +maxQuantity);
-		
+	}
+	if(quantity < 1){
+		document.getElementById(element).value = 1;
+		alert('giá trị không được dưới :1');
 	}
 }
-function checkQuantityAndSubmit(elementId,bookId,maxQuantity){
+function checkQuantityAndSubmit(elementId, bookId, maxQuantity) {
 	let quantity = parseInt(document.getElementById(elementId).value);
-	if(quantity <=0){
-		alert("Nhập số lượng");
+	if (quantity <= 0) {
+		alert('Nhập số lượng!');
 		return;
-	}else if(quantity> maxQuantity){
-		alert("Giá trị không được vượt quá: "+maxQuantity);
+	} else if (quantity > maxQuantity) {
+		alert('Giá trị không được vượt quá: ' + maxQuantity);
 		return;
-	}else{
+	} else {
 		document.getElementById("detailBookForm").submit();
 	}
 }
@@ -79,44 +84,55 @@ function getInfo(){
 	}
 }
 
-function validateValueAndUpdateCart(element,maxQuantity,bookId,price){
-	let newQuantity = element.value;
-	if(newQuantity > maxQuantity){
-		alert('Giá trị ko được vượt quá: '+ maxQuantity);
-	}else if(newQuantity>0){
-		updateQuantityOfCartItem(newQuantity,bookId);
-		document.getElementById("subtotal"+ bookId).innerText=toComma(newQuantity * price);
-		let subtotalList=document.querySelectorAll('[id^="subtotal"]');
+function validateValueAndUpdate(element, maxQuantity, bookId, price) {
+	var newQuantity = element.value;
+	if (newQuantity > maxQuantity) {
+		alert('Giá trị không được vượt quá ' + maxQuantity);
+	} else if (newQuantity > 0) {
+		updateQuantityOfCartItem(newQuantity, bookId);
+		//update subtotal
+		document.getElementById("subtotal" + bookId).innerText = toComma(newQuantity * price);
+		let subtotalList = document.querySelectorAll('[id^="subtotal"]');
 		let total = 0;
-		for(let i=0;i<subtotalList.length;i++){
-			total += parseInt(subtotalList[i].innerText.replace(/,/g,""));
+		for (let i = 0; i < subtotalList.length; i++) {
+			total += parseInt(subtotalList[i].innerText.replace(/,/g, ""));
 		}
 		document.getElementById("total").innerText = toComma(total);
 	}
 }
 
-function toComma(n){
-	return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g,",");
+function toComma(n) {
+	return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function minusValueAndUpdateCart(elementId){
+function minusValueAndUpdate(elementId) {
 	var quantity = parseInt(document.getElementById(elementId).value);
-	if(quantity - 1 >=1){
-		document.getElementById(elementId).value = quantity -1 ;
+	if (quantity - 1 >= 1) {
+		document.getElementById(elementId).value = quantity - 1;
+		//hàm validate được gọi ứng với sự kiện onchange
 		document.getElementById(elementId).onchange();
-		
 	}
 }
-function plusValueAndUpdate(elementId,maxQuantity){
+
+function plusValueAndUpdate(elementId, maxQuantity) {
 	var quantity = parseInt(document.getElementById(elementId).value);
-	if(quantity + 1 <= maxQuantity){
-		document.getElementById(elementId).value = quantity +1;
+	if (quantity + 1 <= maxQuantity) {
+		document.getElementById(elementId).value = quantity + 1;
+		//hàm validate được gọi ứng với sự kiện onchange
 		document.getElementById(elementId).onchange();
-		
-	}else{
-		alert('giá trị không được vượt quá: '+maxQuantity);
+	} else {
+		alert('Giá trị không được vượt quá ' + maxQuantity);
 	}
 }
+
+function onClickRemoveBook(bookTitle, bookId) {
+	let c = confirm('Bạn chắc chắn muốn xóa cuốn sách ' + bookTitle + ' khỏi giỏ hàng');
+	if (c) {
+		document.getElementById("removedBookFromCart").value = bookId;
+		document.getElementById("removedBookFromCartForm").submit();
+	}
+}
+
 function loadImage(event) {
 	let output = document.getElementById('bookImage');
 	output.src = URL.createObjectURL(event.target.files[0]);
@@ -124,3 +140,11 @@ function loadImage(event) {
 		URL.revokeObjectURL(output.src)
 	}
 }
+function onClickDeleteBook(bookTitle, bookId) {
+	let c = confirm('Bạn chắc chắn muốn xóa cuốn sách ' + bookTitle + '?');
+	if (c) {
+		document.getElementById("deleteBookFromAdmin").value = bookId;
+		document.getElementById("deleteBookFromAdminForm").submit();
+	}
+}
+

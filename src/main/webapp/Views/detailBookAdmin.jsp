@@ -40,10 +40,7 @@
 			<tr>
 				<th align="left">Phương thức thanh toán:</th>
 				<td>
-					<c:if test="${order.paymentStatus == false}">Tiền mặt</c:if>
-					<c:if test="${order.paymentStatus == true}">
-						Chuyển khoản
-					</c:if>
+					${order.paymentMode}
 				</td>
 			</tr>
 		</table>

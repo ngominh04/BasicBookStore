@@ -25,7 +25,7 @@
 				<a href="${pageContext.request.contextPath }/logout">Đăng xuất</a>
 			</c:if>
 			<br>
-			Tìm sách :<input name="search" onchange="activeAsLink('${pageContext.request.contextPath }/clientHome?keyword=' +this.value);">
+			Tìm sách :<input name="search" onchange="activeAsLink('${pageContext.request.contextPath }/adminHome?keyword=' +this.value);">
 		</div>
 	</div>
 	<script type="text/javascript" src="${pageContext.request.contextPath }/js/bookStore_script.js"></script>

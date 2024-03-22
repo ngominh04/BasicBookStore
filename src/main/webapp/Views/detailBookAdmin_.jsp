@@ -9,14 +9,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<jsp:include page="_header.jsp"></jsp:include>
-	<jsp:include page="_menu.jsp"></jsp:include>
+	<jsp:include page="_headerAdmin.jsp"></jsp:include>
+	<jsp:include page="_menuAdmin.jsp"></jsp:include>
 	<div align="center">
 		<h3>Thông tin cuốn sách</h3>
-		<c:if test="${not empty book }">
-			<form action="cartBook/addToCart" id="detailBookForm" method="post">
-				<input type="hidden" name="bookId" value="${book.bookId }">
-				<table style="width: 30%" border="1">
+		<table style="width: 30%" border="1">
 					<tr>
 						<td width="25%">Tiêu đề</td>
 						<td>${book.title }</td>
@@ -38,24 +35,7 @@
 						</td>
 					</tr>
 				</table>
-				<div style="margin-top: 20px">
-				<button type="button" onclick="minusValue('quantity');" >-</button>
-				<input
-						type="text" value="1" size="2" style="line-height: 20px;"
-						id="quantity" name="quantityPurchased"
-						onkeyup="validateValue('quantity', ${book.quantityInStock});"> 
-						
-				<button type="button" onclick="plusValue('quantity',${book.quantityInStock});" >+</button>
-				
-				<c:if test="${not empty loginedUser}">
-					<button onclick="checkQuantityAndSubmit('quantity',${book.bookId},${book.quantityInStock })">
-						Thêm vào giỏ hàng
-					</button>   
-				</c:if>
-				<a href="clientHome">Tiếp tục xem tiếp</a>
-				</div>				
-			</form>
-		</c:if>
+				<a href="adminHome">Tiếp tục xem tiếp</a>
 	</div>
 </body>
 </html>

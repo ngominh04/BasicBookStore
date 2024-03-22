@@ -14,6 +14,10 @@
 	
 	<div align="center">
 		<h3>Danh sách các cuốn sách</h3>
+		<c:if test="${keyword != null}">
+			Bạn đang tìm kiếm theo từ khóa : <span>${keyword }</span>
+		</c:if>
+		<br>
 		<table border="1">
 			<tr>
 				<th>Tiêu đề</th>

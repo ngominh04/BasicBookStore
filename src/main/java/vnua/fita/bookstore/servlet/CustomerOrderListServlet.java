@@ -36,11 +36,11 @@ public class CustomerOrderListServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		String customerUserName = LoginFrom.getUsername();
+		String customerUserName = MyUtils.getLoginedUser(request.getSession()).getUsername();
 		List<Order> orderListOfCustomer = OrderDao.getOrderList(customerUserName);
 		request.setAttribute("orderListOfCustomer", orderListOfCustomer);
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/Views/customerOrderListView.jsp");
-		dispatcher.forward(request, response);
+		RequestDispatcher rd=this.getServletContext().getRequestDispatcher("/Views/customerOrderListView.jsp");
+		rd.forward(request, response);
 	}
 
 	/**

@@ -13,6 +13,7 @@ import java.util.List;
 
 import vnua.fita.bookstore.bean.Book;
 import vnua.fita.bookstore.bean.BookAndOrder;
+import vnua.fita.bookstore.bean.Order;
 import vnua.fita.bookstore.database.Database;
 import vnua.fita.bookstore.utils.MyUtils;
 
@@ -87,13 +88,13 @@ public class BookDao {
 		List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 		// cau lenh sql
-		String sql = "select distinct\r\n"
-				+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
-				+ "t2.fullname fullname,t2.mobile mobile\r\n"
-				+ "    from tblorder t\r\n"
-				+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
-				+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
-				+ "where t.order_status = 1";
+		String sql = "select distinct t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+				+ "				t2.fullname fullname,t2.mobile mobile\r\n"
+				+ "				    from tblorder t\r\n"
+				+ "				             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+				+ "				             inner join tbluser t2 on t2.username = t.customer_username\r\n"
+				+ "				where t.order_status = 1\r\n"
+				+ "				ORDER BY t.order_date DESC";
 
 		// tao ket noi
 		Connection jdbcConnection = Database.getConnection();
@@ -128,13 +129,13 @@ public class BookDao {
 			List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 			// cau lenh sql
-			String sql = "select distinct\r\n"
-					+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
-					+ "t2.fullname fullname,t2.mobile mobile\r\n"
-					+ "    from tblorder t\r\n"
-					+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
-					+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
-					+ "where t.order_status = 2";
+			String sql = "select distinct t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+					+ "				t2.fullname fullname,t2.mobile mobile\r\n"
+					+ "				    from tblorder t\r\n"
+					+ "				             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+					+ "				             inner join tbluser t2 on t2.username = t.customer_username\r\n"
+					+ "				where t.order_status = 2\r\n"
+					+ "				ORDER BY t.order_date DESC";
 
 			// tao ket noi
 			Connection jdbcConnection = Database.getConnection();
@@ -167,13 +168,13 @@ public class BookDao {
 				List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 				// cau lenh sql
-				String sql = "select distinct\r\n"
-						+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
-						+ "t2.fullname fullname,t2.mobile mobile\r\n"
-						+ "    from tblorder t\r\n"
-						+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
-						+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
-						+ "where t.order_status = 3";
+				String sql = "select distinct t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+						+ "				t2.fullname fullname,t2.mobile mobile\r\n"
+						+ "				    from tblorder t\r\n"
+						+ "				             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+						+ "				             inner join tbluser t2 on t2.username = t.customer_username\r\n"
+						+ "				where t.order_status = 3\r\n"
+						+ "				ORDER BY t.order_date DESC";
 
 				// tao ket noi
 				Connection jdbcConnection = Database.getConnection();
@@ -206,13 +207,13 @@ public class BookDao {
 			List<BookAndOrder> listBook = new ArrayList<BookAndOrder>();
 
 			// cau lenh sql
-			String sql = "select distinct\r\n"
-					+ "t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
-					+ "t2.fullname fullname,t2.mobile mobile\r\n"
-					+ "    from tblorder t\r\n"
-					+ "             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
-					+ "             inner join tbluser t2 on t2.username = t.customer_username\r\n"
-					+ "where t.order_status = 5";
+			String sql = "select distinct t.order_date orderDate,t.total_cost orderPrice,tb.quantity orderQuantity,t.order_no orderNo,\r\n"
+					+ "				t2.fullname fullname,t2.mobile mobile\r\n"
+					+ "				    from tblorder t\r\n"
+					+ "				             inner join bookshop.tblorder_book tb on t.order_id = tb.order_id\r\n"
+					+ "				             inner join tbluser t2 on t2.username = t.customer_username\r\n"
+					+ "				where t.order_status = 5\r\n"
+					+ "				ORDER BY t.order_date DESC";
 
 			// tao ket noi
 			Connection jdbcConnection = Database.getConnection();
@@ -240,49 +241,6 @@ public class BookDao {
 			return listBook;
 		}
 
-
-	public static List<Book> listAllBooks(String fromDate, String toDate) {
-		List<Book> listBooks = new ArrayList<Book>();
-		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price*obor.quantity) AS sum_price FROM book b "
-				+ "LEFT JOIN "
-				+ "(SELECT ob.* from tblorder_book ob INNER JOIN tblorder o ON ob.order_id = o.order_id "
-				+ "WHERE o.order_status = ? AND (o.status_date BETWEEN ? AND ?)) obor "
-				+ "ON b.id = obor.book_id "
-				+ "GROUP BY b.id "
-				+ "ORDER BY sum_quantity DESC, b.create_date DESC";
-		Connection jdbcConnection = Database.getConnection();
-		try {
-			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
-			preStatement.setInt(1, 3);
-			preStatement.setString(2, fromDate);
-			preStatement.setString(3, toDate);
-			ResultSet resultSet = preStatement.executeQuery();
-			while(resultSet.next()) {
-				int id = resultSet.getInt("id");
-				String title = resultSet.getString("title");
-				String author = resultSet.getString("author");
-				int price = resultSet.getInt("price");
-				int quantityInStock = resultSet.getInt("quantity_in_stock");
-				String detail = resultSet.getString("detail");
-				String imagePath = resultSet.getString("image_path");
-				Date createDate = resultSet.getTimestamp("create_date");
-				int soldQuantity = resultSet.getInt("sum_quantity");
-				int sumOfSoldBook = resultSet.getInt("sum_price");
-				Book book = new Book(id, title, author, price, quantityInStock);
-				book.setDetail(detail);
-				book.setImagePath(imagePath);
-				book.setCreateDate(createDate);
-				book.setSoldQuantity(soldQuantity);
-				book.setSumOfSoldBook(sumOfSoldBook);
-				listBooks.add(book);
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return listBooks;
-	}
-	
-	
 	// xóa sách 
 	public static boolean deleteBook(int bookId) {
 		boolean result = false;
@@ -382,11 +340,11 @@ public class BookDao {
 				String orderNo = resultSet.getString("order_no");
 				Date orderDate= resultSet.getTimestamp("order_date");
 				String deliveryAddress = resultSet.getString("delivery_address");
-				Boolean paymentStatus=resultSet.getBoolean("payment_status");
+				String paymentMode=resultSet.getString("payment_mode");
 				Integer totalCost = resultSet.getInt("total_cost");
 				int orderStatus = resultSet.getInt("order_status");
 				// đóng gói các giá trị thuộc tính vào đối tượng Bean(Book)
-				order = new BookAndOrder(orderNo, orderDate, paymentStatus
+				order = new BookAndOrder(orderNo, orderDate, paymentMode
 						, totalCost, deliveryAddress, fullname, mobile,orderStatus);
 				
 			}
@@ -395,6 +353,20 @@ public class BookDao {
 		}
 		
 		return order;
+	}
+	public static boolean updatePaymentOrder(BookAndOrder order) {
+		boolean result = false;
+		String sql = "update tblorder set payment_status = true where order_no = ?";
+		Connection jdbcConnection = Database.getConnection();
+
+		try {
+			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setString(1, order.getOrderNo());
+			result = preStatement.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	
@@ -478,7 +450,6 @@ public class BookDao {
 			}
 			preStatement.setInt(++index, offset); // vị trí bắt đầu lấy
 			preStatement.setInt(++index, noOfRecords); // số bản ghi lấy ra
-
 			ResultSet resultSet = preStatement.executeQuery();
 			while (resultSet.next()) {
 				int id = resultSet.getInt("id");
@@ -499,24 +470,84 @@ public class BookDao {
 		}
 		return listBook;
 	}
-
-	public static List<Book> listAllBooks(String keyword, String fromDate, String toDate){
-		List<Book> searchBookList = new ArrayList<Book>();
-		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price) AS sum_price FROM book b "
+	
+	// trường hợp ko có keywword
+	public static List<Book> listAllBooks(int offset, int noOfRecords,String fromDate, String toDate) {
+		List<Book> listBooks = new ArrayList<Book>();
+		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price*obor.quantity) AS sum_price FROM book b "
 				+ "LEFT JOIN "
 				+ "(SELECT ob.* from tblorder_book ob INNER JOIN tblorder o ON ob.order_id = o.order_id "
 				+ "WHERE o.order_status = ? AND (o.status_date BETWEEN ? AND ?)) obor "
-				+ "ON b.book_id = obor.book_id "
-				+ "WHERE title LIKE ? "
+				+ "ON b.id = obor.book_id "
 				+ "GROUP BY b.id "
-				+ "ORDER BY sum_quantity DESC, b.create_date DESC";
+				+ "ORDER BY sum_quantity DESC, b.create_date DESC ";
+		sql += "LIMIT ?, ?";
 		Connection jdbcConnection = Database.getConnection();
 		try {
+			int index = 0;
 			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
-			preStatement.setInt(1, 3);
-			preStatement.setString(2, fromDate);
-			preStatement.setString(3, toDate);
-			preStatement.setString(4, "%"+keyword+"%");
+			
+			
+//			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setInt(++index, 3);
+			preStatement.setString(++index, fromDate);
+			preStatement.setString(++index, toDate);
+			preStatement.setInt(++index, offset); // vị trí bắt đầu lấy
+			preStatement.setInt(++index, noOfRecords); // số bản ghi lấy ra
+			ResultSet resultSet = preStatement.executeQuery();
+			while(resultSet.next()) {
+				int id = resultSet.getInt("id");
+				String title = resultSet.getString("title");
+				String author = resultSet.getString("author");
+				int price = resultSet.getInt("price");
+				int quantityInStock = resultSet.getInt("quantity_in_stock");
+				String detail = resultSet.getString("detail");
+				String imagePath = resultSet.getString("image_path");
+				Date createDate = resultSet.getTimestamp("create_date");
+				int soldQuantity = resultSet.getInt("sum_quantity");
+				int sumOfSoldBook = resultSet.getInt("sum_price");
+				Book book = new Book(id, title, author, price, quantityInStock);
+				book.setDetail(detail);
+				book.setImagePath(imagePath);
+				book.setCreateDate(createDate);
+				book.setSoldQuantity(soldQuantity);
+				book.setSumOfSoldBook(sumOfSoldBook);
+				listBooks.add(book);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return listBooks;
+	}
+	
+	public static List<Book> listAllBooks(int offset, int noOfRecords,String keyword, String fromDate, String toDate){
+		List<Book> searchBookList = new ArrayList<Book>();
+		String sql = "SELECT b.*, sum(obor.quantity) AS sum_quantity, sum(obor.price*obor.quantity) AS sum_price FROM book b "
+				+ "LEFT JOIN "
+				+ "(SELECT ob.* from tblorder_book ob INNER JOIN tblorder o ON ob.order_id = o.order_id "
+				+ "WHERE o.order_status = ? AND (o.status_date BETWEEN ? AND ?)) obor "
+				+ "ON b.id = obor.book_id ";
+				if (keyword != null && !keyword.isEmpty()) {
+					sql += "WHERE title LIKE ? ";
+				}
+		sql += "GROUP BY b.id ";
+		sql += "ORDER BY sum_quantity DESC, b.create_date DESC ";
+		sql += "LIMIT ?, ?";
+		
+		Connection jdbcConnection = Database.getConnection();
+		try {
+			int index = 0;
+			PreparedStatement preStatement = jdbcConnection.prepareStatement(sql);
+			
+			preStatement.setInt(++index, 3);
+			preStatement.setString(++index, fromDate);
+			preStatement.setString(++index, toDate);
+			if (keyword != null && !keyword.isEmpty()) {
+				preStatement.setString(++index, "%" + keyword + "%");
+			}
+			preStatement.setInt(++index, offset); // vị trí bắt đầu lấy
+			preStatement.setInt(++index, noOfRecords); // số bản ghi lấy ra
+			
 			ResultSet resultSet = preStatement.executeQuery();
 			while(resultSet.next()) {
 				int id = resultSet.getInt("id");

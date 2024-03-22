@@ -17,6 +17,8 @@
 			value="${loginForm.userName}" required="required"/>
 			<br> <label for="password">Mật khẩu</label><br> <input
 				type="password" name="password" id="password" required="required"><br>
+			<label for="rememberMe">Ghi nhớ</label>
+			<input type="checkbox" name="rememberMe" value="Y" ${loginForm.rememberMe} />
 			<br> <input type="submit" value="Đăng nhập"> <a
 				href="${pageContext.request.contextPath}/">Bỏ qua</a>
 		</form>

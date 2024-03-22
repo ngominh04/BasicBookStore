@@ -37,21 +37,32 @@ public class AdminHomeServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		String errors = null;
-		List<Book> list = BookDao.listAllBooks();
+		int page = 1;
+		int revordsPerPage =2;
+		
+		
+		if (request.getParameter("page") != null) {
+			page =Integer.parseInt(request.getParameter("page"));
+		}
+		
 		String keyword = request.getParameter("keyword");
 		Date today = new Date();
+		int noOfRecords = BookDao.getNoOfRecords(keyword);
+		int noOfPages = (int) Math.ceil(noOfRecords*1.0/revordsPerPage);
+		
+		
 		Date todaySubtract12Month = MyUtils.subtractFromDate(12, today);
 		String todaySubtract12MonthStr = MyUtils.convertDateToString(todaySubtract12Month);
 		String todayStr = MyUtils.convertDateToString(today);
-		if(keyword != null && !keyword.isEmpty()) {
-			list = BookDao.listAllBooks(keyword, todaySubtract12MonthStr, todayStr);
-		}else {
-			list = BookDao.listAllBooks(todaySubtract12MonthStr, todayStr);
-		}
+		
+		List<Book> list  = BookDao.listAllBooks((page-1)*revordsPerPage, revordsPerPage,keyword, todaySubtract12MonthStr, todayStr);
+		
 		if (list.isEmpty()) {
 			errors = "Không thể lấy dữ liệu";
 		}
-
+		request.setAttribute("noOfPages", noOfPages);
+		request.setAttribute("page", page);
+		request.setAttribute("keyword", keyword);
 		request.setAttribute("errors", errors);
 		request.setAttribute("turnover", calSumOfMoney(list));
 		request.setAttribute("bookList", list);

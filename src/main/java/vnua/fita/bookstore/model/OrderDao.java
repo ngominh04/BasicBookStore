@@ -5,11 +5,16 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import vnua.fita.bookstore.bean.Book;
 import vnua.fita.bookstore.bean.CartItem;
 import vnua.fita.bookstore.bean.Order;
+import vnua.fita.bookstore.bean.User;
 import vnua.fita.bookstore.database.Database;
 import vnua.fita.bookstore.utils.MyUtils;
 
@@ -29,8 +34,6 @@ public class OrderDao {
 		this.jdbcPassword = jdbcPassword;
 	}
 
-	// trả lại kết quả check và cập nhật số lượng có trong kho của các mặt hàng
-	// trong order
 	public static boolean checkAndUpdateAvaiableBookOfOrder(Order order) {
 		boolean checkAvaiable = true; // có hàng
 		String sql;
@@ -44,15 +47,8 @@ public class OrderDao {
 				preStatement.setInt(1, selectedBook.getBookId());
 				resultSet = preStatement.executeQuery();
 				if (resultSet.next()) {
-					int presentQuantityInStock = resultSet.getInt("quantity_in_stock"); // số
-																						// lượng
-																						// hiện
-																						// có
-																						// trong
-																						// kho
-					if (presentQuantityInStock < cartItem.getQuantity()) { // nếu nhỏ hơn
-																			// số lượng
-																			// đặt mua
+					int presentQuantityInStock = resultSet.getInt("quantity_in_stock"); 
+					if (presentQuantityInStock < cartItem.getQuantity()) { 
 						checkAvaiable = false;
 						selectedBook.setQuantityInStock(presentQuantityInStock);
 						// cập nhật số lượng có trong kho của sách
@@ -80,7 +76,6 @@ public class OrderDao {
 		try {
 			jdbcConnection.setAutoCommit(false);
 
-			// thêm hóa đơn
 			preStatement = jdbcConnection.prepareStatement(sql1);
 			preStatement.setString(1, order.getCustomer().getUsername());
 			preStatement.setString(2, order.getPaymentMode());
@@ -165,6 +160,78 @@ public class OrderDao {
 
 	public static List<Order> getOrderList(String customerUserName) {
 		// TODO Auto-generated method stub
-		return null;
+		Map<Integer, Order> orderListHashMap = new HashMap<Integer, Order>();
+		String sql = "SELECT ord.*, ordb.quantity, ordb.price, b.*, u.* "
+				+ "FROM tblorder ord "
+				+ "INNER JOIN tblorder_book ordb ON ord.order_id = ordb.order_id "
+				+ "INNER JOIN book b ON ordb.book_id = b.id "
+				+ "INNER JOIN tbluser u ON ord.customer_username = u.username "
+				+ "WHERE ord.customer_username = ? " + "ORDER BY ord.order_date DESC";
+		Connection jdbcConnection = Database.getConnection();
+		try {
+			preStatement = jdbcConnection.prepareStatement(sql);
+			preStatement.setString(1, customerUserName);
+			resultSet = preStatement.executeQuery();
+			while (resultSet.next()) {
+				int orderId = resultSet.getInt("order_id");
+				if (!orderListHashMap.containsKey(orderId)) {
+					// neu chua co trong hashmap
+					Order order = new Order();
+					fillOrderFromResultSet(resultSet, order);
+					List<CartItem> orderBookList = new ArrayList<CartItem>();
+					Book orderBook = new Book();
+					fillBookFromResultSet(resultSet, orderBook);
+					CartItem cartItem = new CartItem(orderBook,
+							resultSet.getInt("ordb.quantity"));
+					orderBookList.add(cartItem);
+					order.setOrderBookList(orderBookList);
+					orderListHashMap.put(orderId, order);
+				} else {
+					
+					Order order = orderListHashMap.get(orderId); 
+					List<CartItem> orderBookList = order.getOrderBookList(); 
+					Book orderBook = new Book();
+					fillBookFromResultSet(resultSet, orderBook);
+					CartItem cartItem = new CartItem(orderBook,
+							resultSet.getInt("ordb.quantity"));
+					orderBookList.add(cartItem); 
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} 
+
+		Collection<Order> values = orderListHashMap.values();
+		ArrayList<Order> orderList = new ArrayList<Order>(values);
+		
+		return orderList;
+	}
+	private static void fillOrderFromResultSet(ResultSet resultSet, Order order)
+			throws SQLException {
+		order.setOrderId(resultSet.getInt("order_id"));
+		order.setOrderNo(resultSet.getString("ord.order_no"));
+		order.setOrderDate(resultSet.getTimestamp("ord.order_date"));
+		order.setOrderApproveDate(resultSet.getTimestamp("ord.order_approve_date"));
+		order.setOrderStatus(resultSet.getByte("ord.order_status"));
+		order.setStatusDate(resultSet.getTimestamp("ord.status_date"));
+		order.setPaymentMode(resultSet.getString("ord.payment_mode"));
+		order.setPaymentStatus(resultSet.getBoolean("ord.payment_status"));
+		order.setTotalCost(resultSet.getInt("ord.total_cost"));
+		order.setDeliveryAddress(resultSet.getString("ord.delivery_address"));
+		order.setPaymentImagePath(resultSet.getString("ord.payment_img"));
+		User customer = new User();
+		customer.setUsername(resultSet.getString("u.username"));
+		customer.setFullname(resultSet.getString("u.fullname"));
+		customer.setMobile(resultSet.getString("u.mobile"));
+		order.setCustomer(customer);
+	}
+
+	private static void fillBookFromResultSet(ResultSet resultSet, Book orderBook)
+			throws SQLException {
+		orderBook.setBookId(resultSet.getInt("b.id"));
+		orderBook.setTitle(resultSet.getString("b.title"));
+		orderBook.setAuthor(resultSet.getString("b.author"));
+		orderBook.setPrice(resultSet.getInt("ordb.price"));
+		orderBook.setImagePath(resultSet.getString("b.image_path"));
 	}
 }

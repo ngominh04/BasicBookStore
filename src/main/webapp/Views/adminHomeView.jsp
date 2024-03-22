@@ -60,6 +60,51 @@
 		<br>
 		<a href="createBook">Thêm sách mới</a>
 	</div>
+	<div align="center">
+	<c:if test="${empty keyword }">
+			<div style="margin-top: 5px">
+				<c:if test="${currentPage gt 1 }">
+					<a href="adminHome?page=${curentPage-1 }">Previous</a>
+				</c:if>
+				<c:forEach	begin="1" end="${noOfPages }" var="i">
+					<c:choose>
+						<c:when test="${curentPage eq i }">
+							&nbsp;${i}&nbsp;
+						</c:when>
+						<c:otherwise>
+							&nbsp;<a href="adminHome?page=${i }">${i }</a>&nbsp;
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				
+				<c:if test="${curentPage lt noOfPages }">
+					&nbsp;<a href="adminHome?page=${curentPage + 1 }">Next</a>
+				</c:if>
+			</div>
+		</c:if>
+		
+		<c:if test="${not empty keyword }">
+			<div style="margin-top: 5px">
+				<c:if test="${currentPage gt 1 }">
+					<a href="adminHome?page=${curentPage-1 }">Previous</a>
+				</c:if>
+				<c:forEach	begin="1" end="${noOfPages }" var="i">
+					<c:choose>
+						<c:when test="${curentPage eq i }">
+							&nbsp;${i}&nbsp;
+						</c:when>
+						<c:otherwise>
+							&nbsp;<a href="adminHome?page=${i }&keyword=${keyword}">${i }</a>&nbsp;
+						</c:otherwise>
+					</c:choose>
+				</c:forEach>
+				
+				<c:if test="${curentPage lt noOfPages }">
+					&nbsp;<a href="adminHome?page=${curentPage + 1 }$&keyword=${keyword}">Next</a>
+				</c:if>
+			</div>
+		</c:if>
+	</div>
 	
 	
 	
@@ -71,7 +116,6 @@
 				document.getElementById("deleteBookFormAdminForm").submit();
 			}
 		}
-		
 	</script>
 </body>
 </html>

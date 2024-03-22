@@ -32,12 +32,12 @@ public class BookAndOrder {
 	private String fullname;
 	private String mobile;
 	
-	public BookAndOrder(String orderNo, Date orderDate,  Boolean paymentStatus, float totalCost, String deliveryAddress,
+	public BookAndOrder(String orderNo, Date orderDate,  String paymentMode, float totalCost, String deliveryAddress,
 			String fullname, String mobile,int orderStatus) {
 		super();
 		this.orderNo = orderNo;
 		this.orderDate = orderDate;
-		this.paymentStatus = paymentStatus;
+		this.paymentMode = paymentMode;
 		this.totalCost = totalCost;
 		this.deliveryAddress = deliveryAddress;
 		this.fullname = fullname;

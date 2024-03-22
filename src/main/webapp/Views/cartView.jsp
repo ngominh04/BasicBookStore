@@ -15,7 +15,8 @@
 		<h3>Các cuốn sách có trong giỏ hàng</h3>
 		<form action="removeFromCart" id="removeBookFromCartForm" method="post">
 			<input type="hidden" name="bookId" id="removeBookFromCart">
-			</form>
+		</form>
+		<form action="cartBook/addToCart" method="post" enctype="application/x-www-form-urlencoded">
 			<table border="1">
 			<tr>
 				<td>Tiêu đề</td>
@@ -25,49 +26,46 @@
 				<td>Tổng tiền</td>
 				<td>Thao tác</td>
 			</tr>
-			<c:forEach items="${cartOfCustomer.cartItemList }" var="entry">
-				
-				<tr>
-					<td>${entry.value.selectedBook.title }</td>
-					<td>${entry.value.selectedBook.author }</td>
-					<td>
-					<fmt:formatNumber type="number" maxFractionDigits="0" value="${entry.value.selectedBook.price }"/> <sup>đ</sup></td>
-					<td>
-						<button type="button" 
-							onclick="minusValueAndUpdateCart('quantity${entry.value.selectedBook.bookId }');" 
-						> - </button>
-						
-						<input type="text" value="${entry.value.quantity }" 
-							id="quantity${entry.value.selectedBook.bookId }" 
-							onchange="validateValueAndUpdateCart(this,${entry.value.selectedBook.quantityInStock }
-																		,${entry.value.selectedBook.bookId }
-																		,${entry.value.selectedBook.price })"
-							size="2" style="line-height: 20px" >
-							
-						<button type="button" 
-							onclick="plusValueAndUpdate('quantity${entry.value.selectedBook.bookId }'
-																	,${entry.value.selectedBook.quantityInStock});" 
-						>+</button>
-					</td>
-					<td>
-						<span id="subtotal${entry.value.selectedBook.bookId }">
-							<fmt:formatNumber 
-								type="number" maxFractionDigits="0" 
-								value="${entry.value.selectedBook.price*entry.value.quantity }"/> <sup>đ</sup>
-						</span>
-						
-					</td>
-					<td>
-						<button type="button" 
-						onclick="onClickRemoveBook('${entry.value.selectedBook.title}'
-													,${entry.value.selectedBook.bookId })">
-							Xóa sp
-						</button>   
-					</td>
-				</tr>
-			</c:forEach>
 			
+				<c:forEach items="${cartOfCustomer.cartItemList }" var="entry">
+					<tr>
+						<td>${entry.value.selectedBook.title }</td>
+						<td>${entry.value.selectedBook.author }</td>
+						<td>
+						<fmt:formatNumber type="number" maxFractionDigits="0" value="${entry.value.selectedBook.price }"/> <sup>đ</sup></td>
+						<td>
+							<button type="button" 
+								onclick="minusValueAndUpdate('quantity${entry.value.selectedBook.bookId }');" 
+							> - </button>
+							
+							<input type="text" value="${entry.value.quantity }" 
+								id="quantity${entry.value.selectedBook.bookId }"
+								name="quantityPurchased" 
+								onchange="validateValueAndUpdate(this,${entry.value.selectedBook.quantityInStock }
+																			,${entry.value.selectedBook.bookId }
+																			,${entry.value.selectedBook.price })"
+								size="2" style="line-height: 20px" >
+								
+							<button type="button" 
+								onclick="plusValueAndUpdate('quantity${entry.value.selectedBook.bookId }'
+																		,${entry.value.selectedBook.quantityInStock});" 
+							>+</button>
+						</td>
+						<td>
+							<span id="subtotal${entry.value.selectedBook.bookId }">
+								<fmt:formatNumber 
+									type="number" maxFractionDigits="0" 
+									value="${entry.value.selectedBook.price*entry.value.quantity }"/> <sup>đ</sup>
+							</span>
+							
+						</td>
+						<td><button type="button"
+								onclick="onClickRemoveBook('${entry.value.selectedBook.title}',${entry.value.selectedBook.bookId })">
+								xóa sp</button></td>
+					</tr>
+				</c:forEach>
 		</table>
+		</form>
 		<br>
 			<a href="${pageContext.request.contextPath }/clientHome">Tiếp tục xem tiếp</a>  
 			Tổng số tiền:
